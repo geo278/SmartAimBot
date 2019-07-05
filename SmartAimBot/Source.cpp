@@ -9,6 +9,7 @@ using namespace std;
 //bool paused = false;
 
 void capture(POINT a, POINT b) {
+// source: https://causeyourestuck.io/2016/01/12/screenshot-c-win32-api/
 	// copy screen to bitmap
 	HDC     hScreen = GetDC(NULL);
 	HDC     hDC = CreateCompatibleDC(hScreen);
@@ -39,11 +40,21 @@ bool Aim() {
 	a.y = 405;
 	b.x = 1200;
 	b.y = 675;
+
+	POINT pos;
+
+
+
 	while (true) { // while rmb pressed
 		if ((GetKeyState(VK_RBUTTON) & 0x100) != 0) {
 			capture(a, b);
-		}
 
+			GetCursorPos(&pos);
+			pos.x += 1;
+			HWND mWindow = GetFocus();
+			mouse_event(MOUSEEVENTF_MOVE, -1, 1, 0, 0);
+		}
+		Sleep(5);
 		// get bitmap
 		// compute offset to first colour match
 		// move mouse
@@ -58,10 +69,7 @@ bool Aim() {
 
 
 int main() {
-	//POINT pos;
-	//GetCursorPos(&pos);
-	//CurrentMouseXY.X = pos.x;
-	//CurrentMouseXY.Y = pos.y;
+
 
 	Aim();
 	//system("pause");
