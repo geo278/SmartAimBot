@@ -24,14 +24,17 @@ RGBQUAD * capture(POINT a, POINT b) {
 
 
 
-	struct {
-		BITMAPINFOHEADER bmiHeader;
-		RGBQUAD bmiColors[256];
-	} bmi;
-	memset(&bmi, 0, sizeof(bmi));
-	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	BITMAPINFOHEADER bmi = { 0 };
+	bmi.biSize = sizeof(BITMAPINFOHEADER);
+	bmi.biPlanes = 1;
+	bmi.biBitCount = 32;
+	bmi.biWidth = 400;
+	bmi.biHeight = -400;
+	bmi.biCompression = BI_RGB;
+	bmi.biSizeImage = 0;// 3 * ScreenX * ScreenY;
 
-	RGBQUAD * pixels = new RGBQUAD[400 * 400];
+
+	static RGBQUAD * pixels = new RGBQUAD[400 * 400];
 	GetDIBits(hDC, hBitmap, 0, 400, pixels, (BITMAPINFO*)& bmi, DIB_RGB_COLORS);
 
 
@@ -65,9 +68,9 @@ bool Aim() {
 				blue = (int)pixels[i].rgbBlue;
 			}
 
-			red = (int)pixels[1].rgbRed;
-			green = (int)pixels[1].rgbGreen;
-			blue = (int)pixels[1].rgbBlue;
+			red = (int)pixels[400-1].rgbRed;
+			green = (int)pixels[400 - 1].rgbGreen;
+			blue = (int)pixels[400 - 1].rgbBlue;
 			cout << red << ", " << green << ", " << blue << endl;
 
 
