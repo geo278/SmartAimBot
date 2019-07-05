@@ -8,14 +8,14 @@ using namespace std;
 
 //bool paused = false;
 
-void capture(POINT a, POINT b) {
-// source: https://causeyourestuck.io/2016/01/12/screenshot-c-win32-api/
+HBITMAP capture(POINT a, POINT b) {
+// code for taking screenshots: https://causeyourestuck.io/2016/01/12/screenshot-c-win32-api/
 	// copy screen to bitmap
 	HDC     hScreen = GetDC(NULL);
 	HDC     hDC = CreateCompatibleDC(hScreen);
 	HBITMAP hBitmap = CreateCompatibleBitmap(hScreen, abs(b.x - a.x), abs(b.y - a.y));
 	HGDIOBJ old_obj = SelectObject(hDC, hBitmap);
-	BOOL    bRet = BitBlt(hDC, 0, 0, abs(b.x - a.x), abs(b.y - a.y), hScreen, a.x, a.y, SRCCOPY);
+	BOOL    bRet = BitBlt(hDC, 0, 0, abs(b.x - a.x), abs(b.y - a.y), hScreen, a.x, a.y, SRCCOPY); // BitBlt does the copying
 
 	// save bitmap to clipboard
 	OpenClipboard(NULL);
@@ -28,50 +28,44 @@ void capture(POINT a, POINT b) {
 	DeleteDC(hDC);
 	ReleaseDC(NULL, hScreen);
 	DeleteObject(hBitmap);
+	return hBitmap;
 }
 
-//void SetupBitmapInfo(BITMAPINFO& bmi, int bWidth, int bHeight, int bitsPerPixel);
-//bool CompareColour(RGBQUAD * pPixels, int height, int width, int x, int y);
-//void ScanBMP(Scan * scan);
+
 
 bool Aim() {
 	POINT a, b;
-	a.x = 720;
-	a.y = 405;
-	b.x = 1200;
-	b.y = 675;
-
-	POINT pos;
-
-
+	a.x = 760;
+	a.y = 340;
+	b.x = 1160;
+	b.y = 740;
+	HBITMAP hbm;
 
 	while (true) { // while rmb pressed
 		if ((GetKeyState(VK_RBUTTON) & 0x100) != 0) {
-			capture(a, b);
+			hbm = capture(a, b);
 
-			GetCursorPos(&pos);
-			pos.x += 1;
-			HWND mWindow = GetFocus();
-			mouse_event(MOUSEEVENTF_MOVE, -1, 1, 0, 0);
-		}
-		Sleep(5);
-		// get bitmap
+
+
+
+
+		// get bitmap 
+		// match colours
 		// compute offset to first colour match
-		// move mouse
-		// wait duration
+
+
+
+
+
+			mouse_event(MOUSEEVENTF_MOVE, -10, 1, 0, 0); // x and y are deltas, not abs coordinates
+		}
+		Sleep(5); // extra buffer time
 	}
 
-	// !paused && 
 	return true;
 }
 
-//MouseCoordinates CurrentMouseXY(0, 0);
-
-
 int main() {
-
-
 	Aim();
-	//system("pause");
 	return 0;
 }
