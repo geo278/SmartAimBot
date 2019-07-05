@@ -8,8 +8,7 @@ using namespace std;
 
 //bool paused = false;
 
-HBITMAP capture(POINT a, POINT b) {
-// code for taking screenshots: https://causeyourestuck.io/2016/01/12/screenshot-c-win32-api/
+RGBQUAD * capture(POINT a, POINT b) {
 	// copy screen to bitmap
 	HDC     hScreen = GetDC(NULL);
 	HDC     hDC = CreateCompatibleDC(hScreen);
@@ -23,12 +22,25 @@ HBITMAP capture(POINT a, POINT b) {
 	SetClipboardData(CF_BITMAP, hBitmap);
 	CloseClipboard();
 
+
+
+	struct {
+		BITMAPINFOHEADER bmiHeader;
+		RGBQUAD bmiColors[256];
+	} bmi;
+	memset(&bmi, 0, sizeof(bmi));
+	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+
+	RGBQUAD * pixels = new RGBQUAD[400 * 400];
+	GetDIBits(hDC, hBitmap, 0, 400, pixels, (BITMAPINFO*)& bmi, DIB_RGB_COLORS);
+
+
 	// clean up
 	SelectObject(hDC, old_obj);
 	DeleteDC(hDC);
 	ReleaseDC(NULL, hScreen);
 	DeleteObject(hBitmap);
-	return hBitmap;
+	return pixels;
 }
 
 
@@ -39,29 +51,35 @@ bool Aim() {
 	a.y = 340;
 	b.x = 1160;
 	b.y = 740;
-	HBITMAP hbm;
-
+	RGBQUAD * pixels;
+	int red;
+	int green;
+	int blue;
 	while (true) { // while rmb pressed
 		if ((GetKeyState(VK_RBUTTON) & 0x100) != 0) {
-			hbm = capture(a, b);
+			pixels = capture(a, b);
+
+			for (int i = 0; i < 400; i++) {
+				red = (int)pixels[i].rgbRed;
+				green = (int)pixels[i].rgbGreen;
+				blue = (int)pixels[i].rgbBlue;
+			}
+
+			red = (int)pixels[1].rgbRed;
+			green = (int)pixels[1].rgbGreen;
+			blue = (int)pixels[1].rgbBlue;
+			cout << red << ", " << green << ", " << blue << endl;
 
 
+			if ((int)pixels[0].rgbRed == 255) {
+				mouse_event(MOUSEEVENTF_MOVE, -10, 1, 0, 0);
+			}
 
-
-
-		// get bitmap 
-		// match colours
-		// compute offset to first colour match
-
-
-
-
-
-			mouse_event(MOUSEEVENTF_MOVE, -10, 1, 0, 0); // x and y are deltas, not abs coordinates
+			//mouse_event(MOUSEEVENTF_MOVE, -10, 1, 0, 0); // x and y are deltas, not abs coordinates
 		}
 		Sleep(5); // extra buffer time
 	}
-
+	free(pixels);
 	return true;
 }
 
