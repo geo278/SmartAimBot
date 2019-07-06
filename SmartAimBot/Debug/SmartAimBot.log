@@ -1,1 +1,4 @@
-﻿  SmartAimBot.vcxproj -> C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Debug\SmartAimBot.exe
+﻿  Source.cpp
+C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Source.cpp(80,32): warning C4244:  '=': conversion from 'double' to 'LONG', possible loss of data
+C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Source.cpp(81,32): warning C4244:  '=': conversion from 'double' to 'LONG', possible loss of data
+  SmartAimBot.vcxproj -> C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Debug\SmartAimBot.exe

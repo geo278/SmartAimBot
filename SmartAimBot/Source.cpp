@@ -6,48 +6,10 @@
 #include "opencv2/objdetect/objdetect.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include <thread>
 
 using namespace std;
 using namespace cv;
-
-
-RGBQUAD * capture(POINT a, POINT b) {
-	// copy screen to bitmap
-	HDC     hScreen = GetDC(NULL);
-	HDC     hDC = CreateCompatibleDC(hScreen);
-	HBITMAP hBitmap = CreateCompatibleBitmap(hScreen, abs(b.x - a.x), abs(b.y - a.y));
-	HGDIOBJ old_obj = SelectObject(hDC, hBitmap);
-	BOOL    bRet = BitBlt(hDC, 0, 0, abs(b.x - a.x), abs(b.y - a.y), hScreen, a.x, a.y, SRCCOPY); // BitBlt does the copying
-
-	// save bitmap to clipboard
-	OpenClipboard(NULL);
-	EmptyClipboard();
-	SetClipboardData(CF_BITMAP, hBitmap);
-	CloseClipboard();
-
-
-	// Array conversion:
-	RGBQUAD* pixels = new RGBQUAD[160000];
-
-	BITMAPINFOHEADER bmi = { 0 };
-	bmi.biSize = sizeof(BITMAPINFOHEADER);
-	bmi.biPlanes = 1;
-	bmi.biBitCount = 32;
-	bmi.biWidth = 400;
-	bmi.biHeight = -400;
-	bmi.biCompression = BI_RGB;
-	bmi.biSizeImage = 0;// 3 * ScreenX * ScreenY;
-	
-	GetDIBits(hDC, hBitmap, 0, 400, pixels, (BITMAPINFO*)& bmi, DIB_RGB_COLORS);
-
-
-	// clean up
-	SelectObject(hDC, old_obj);
-	DeleteDC(hDC);
-	ReleaseDC(NULL, hScreen);
-	DeleteObject(hBitmap);
-	return pixels;
-}
 
 Mat capture(HWND hwnd) { // screen capture code adapted from https://stackoverflow.com/questions/34466993/opencv-desktop-capture
 	HDC hwindowDC, hwindowCompatibleDC;
@@ -73,7 +35,7 @@ Mat capture(HWND hwnd) { // screen capture code adapted from https://stackoverfl
 
 	// create a bitmap
 	hbwindow = CreateCompatibleBitmap(hwindowDC, width, height);
-	bi.biSize = sizeof(BITMAPINFOHEADER);    //http://msdn.microsoft.com/en-us/library/windows/window/dd183402%28v=vs.85%29.aspx
+	bi.biSize = sizeof(BITMAPINFOHEADER);    // http://msdn.microsoft.com/en-us/library/windows/window/dd183402%28v=vs.85%29.aspx
 	bi.biWidth = width;
 	bi.biHeight = -height;  //this is the line that makes it draw upside down or not
 	bi.biPlanes = 1;
@@ -101,30 +63,28 @@ Mat capture(HWND hwnd) { // screen capture code adapted from https://stackoverfl
 }
 
 bool Aim() {
+	vector<Rect> targets;
 	POINT targetPos;
 	Mat pic;
-	CascadeClassifier upperBody;
-	if (upperBody.load("C:\\Users\\georg\\CPSC\\opencv-4.1.0\\data\\haarcascades\\haarcascade_upperbody.xml") && !upperBody.empty()) {
-		cout << "Successfully loaded haarcascade_upperbody.xml" << endl;
+	CascadeClassifier target;
+	if (target.load("C:\\Users\\georg\\CPSC\\SmartAimBot\\SmartAimBot\\haarcascade_upperbody.xml") && !target.empty()) {
+		cout << "Successfully loaded XML file" << endl;
 	}
 	else cout << "Error Loading XML file" << endl;
 
 	while (true) {
 		if ((GetKeyState(VK_RBUTTON) & 0x100) != 0) { // while rmb pressed
-
 			pic = capture(NULL);
-			vector<Rect> targets;
-			upperBody.detectMultiScale(pic, targets, 1.1, 2, 0 | CV_HAAR_SCALE_IMAGE, Size(20, 20), Size(200, 200));
-
+			target.detectMultiScale(pic, targets, 1.05, 2, 0, Size(15, 15), Size(250, 250));
 			if (targets.size() > 0) {
 				targetPos.x = targets[0].x + targets[0].width * 0.5;
 				targetPos.y = targets[0].y + targets[0].height * 0.5;
 				mouse_event(MOUSEEVENTF_MOVE, targetPos.x - 200, targetPos.y - 200, 0, 0);
 			}
 		}
-		//Sleep(5); // extra buffer time
+		targets.shrink_to_fit();
+		Sleep(1); // reduce resource consumption
 	}
-	//free(pixels);
 	return true;
 }
 
