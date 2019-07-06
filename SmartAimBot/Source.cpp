@@ -58,34 +58,28 @@ bool Aim() {
 	b.x = 1160;
 	b.y = 740;
 	RGBQUAD * pixels;
-
 	int red;
 	int green;
 	int blue;
 	POINT targetPos;
 
-	double radius, angle, angleDiffFactor;
+	double radius, angle, diffFactor;
+	diffFactor = 100;
 	int x, y, index;
 
 	while (true) {
-		x = 199;
-		y = 199;
-		angleDiffFactor = 100;
-		angle = 3.1415 / angleDiffFactor;
+		angle = 2 * 3.1415 / diffFactor;
 		radius = 1;
 		if ((GetKeyState(VK_RBUTTON) & 0x100) != 0) { // while rmb pressed
 			pixels = capture(a, b);
-
 			for (int i = 0; i < 160000; i++) {
-
 				x = radius * cos(angle) + 200;
 				y = radius * sin(angle) + 200;
-				angle += 2 * 3.1415 / angleDiffFactor;
-				radius += 1 / angleDiffFactor;
+				angle += 2 * 3.1415 / diffFactor;
+				radius += 1 / diffFactor;
 
 				if (x < 0 || x > 399 || y < 0 || y > 399) {
-
-					cout << "OUT OF BOUNDS  " << x << "  " << y << endl;
+					//cout << "OUT OF BOUNDS  " << x << "  " << y << endl;
 					break;
 				}
 				index = y * 400 + x;
@@ -101,10 +95,11 @@ bool Aim() {
 					mouse_event(MOUSEEVENTF_MOVE, targetPos.x - 200, targetPos.y - 200, 0, 0); // x and y are deltas, not abs coordinates
 					break;
 				}
+
 				//cout << red << ", " << green << ", " << blue << endl;
 			}
 		}
-		Sleep(5); // extra buffer time
+		Sleep(50); // extra buffer time
 	}
 	free(pixels);
 	return true;
