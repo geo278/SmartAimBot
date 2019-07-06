@@ -1,5 +1,1 @@
-﻿  Source.cpp
-C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Source.cpp(117,32): warning C4244:  '=': conversion from 'double' to 'LONG', possible loss of data
-C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Source.cpp(118,32): warning C4244:  '=': conversion from 'double' to 'LONG', possible loss of data
-C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Source.cpp(118,32): warning C4244: C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Source.cpp(69) : warning C4172: returning address of local variable or temporary: pixels
-  SmartAimBot.vcxproj -> C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Debug\SmartAimBot.exe
+﻿  SmartAimBot.vcxproj -> C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Debug\SmartAimBot.exe
