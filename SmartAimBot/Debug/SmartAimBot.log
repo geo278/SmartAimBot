@@ -1,1 +1,4 @@
-﻿  SmartAimBot.vcxproj -> C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Debug\SmartAimBot.exe
+﻿  Source.cpp
+C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Source.cpp(81,29): warning C4244:  '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Source.cpp(82,29): warning C4244:  '=': conversion from 'double' to 'int', possible loss of data
+  SmartAimBot.vcxproj -> C:\Users\georg\CPSC\SmartAimBot\SmartAimBot\Debug\SmartAimBot.exe

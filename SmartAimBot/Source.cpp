@@ -26,7 +26,6 @@ RGBQUAD * capture(POINT a, POINT b) {
 	CloseClipboard();
 
 
-
 	// Array conversion:
 	RGBQUAD* pixels = new RGBQUAD[160000];
 
@@ -65,20 +64,40 @@ bool Aim() {
 	int blue;
 	POINT targetPos;
 
+	double radius, angle, angleDiffFactor;
+	int x, y, index;
+
 	while (true) {
+		x = 199;
+		y = 199;
+		angleDiffFactor = 100;
+		angle = 3.1415 / angleDiffFactor;
+		radius = 1;
 		if ((GetKeyState(VK_RBUTTON) & 0x100) != 0) { // while rmb pressed
 			pixels = capture(a, b);
 
 			for (int i = 0; i < 160000; i++) {
 
+				x = radius * cos(angle) + 200;
+				y = radius * sin(angle) + 200;
+				angle += 2 * 3.1415 / angleDiffFactor;
+				radius += 1 / angleDiffFactor;
 
-				red = (int)pixels[i].rgbRed;
-				green = (int)pixels[i].rgbGreen;
-				blue = (int)pixels[i].rgbBlue;
+				if (x < 0 || x > 399 || y < 0 || y > 399) {
+
+					cout << "OUT OF BOUNDS  " << x << "  " << y << endl;
+					break;
+				}
+				index = y * 400 + x;
+
+				red = (int)pixels[index].rgbRed;
+				green = (int)pixels[index].rgbGreen;
+				blue = (int)pixels[index].rgbBlue;
+
 
 				if (red > 230 && green > 230 && blue > 230) {
-					targetPos.x = i % 400;
-					targetPos.y = i / 400;
+					targetPos.x = index % 400;
+					targetPos.y = index / 400;
 					mouse_event(MOUSEEVENTF_MOVE, targetPos.x - 200, targetPos.y - 200, 0, 0); // x and y are deltas, not abs coordinates
 					break;
 				}
