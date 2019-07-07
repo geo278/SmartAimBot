@@ -75,7 +75,7 @@ bool Aim() {
 	while (true) {
 		if ((GetKeyState(VK_RBUTTON) & 0x100) != 0) { // while rmb pressed
 			pic = capture(NULL);
-			target.detectMultiScale(pic, targets, 1.05, 2, 0, Size(15, 15), Size(250, 250));
+			target.detectMultiScale(pic, targets, 1.05, 1, 0, Size(5, 5), Size(150, 150));
 			if (targets.size() > 0) {
 				targetPos.x = targets[0].x + targets[0].width * 0.5;
 				targetPos.y = targets[0].y + targets[0].height * 0.5;
