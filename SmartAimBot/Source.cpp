@@ -7,6 +7,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <thread>
+#include <vector>
 
 using namespace std;
 using namespace cv;
